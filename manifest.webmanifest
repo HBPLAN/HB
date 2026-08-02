@@ -1,0 +1,10 @@
+{
+  "name": "HB Planner Professional",
+  "short_name": "HB Planner",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#edf5f9",
+  "theme_color": "#1686d5",
+  "lang": "ko-KR"
+}

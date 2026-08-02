@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1686d5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="HB Planner">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="css/style.css">
+  <title>HB Planner Professional</title>
+</head>
+<body>
+
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">HB</div>
+    <h1>HB Planner</h1>
+    <p>Professional</p>
+
+    <label>아이디
+      <input id="loginUserInput" type="text" autocomplete="username" placeholder="아이디 입력">
+    </label>
+
+    <label>비밀번호
+      <input id="loginPasswordInput" type="password" autocomplete="current-password" placeholder="비밀번호 입력">
+    </label>
+
+    <label class="remember-row">
+      <input id="rememberLoginInput" type="checkbox">
+      <span>로그인 상태 유지</span>
+    </label>
+
+    <button id="loginBtn" class="primary full">로그인</button>
+
+    <div class="login-help">
+      처음 사용하는 아이디는 입력한 비밀번호로 자동 등록됩니다.
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <header class="topbar">
+    <div><strong>HB PLANNER</strong><span id="currentUserLabel">Professional</span></div>
+    <div class="top-actions">
+      <button id="logoutBtn" aria-label="로그아웃">↪</button>
+      <button id="settingsBtn" aria-label="환경설정">⚙</button>
+    </div>
+  </header>
+
+  <section class="datebar">
+    <button id="prevDay" aria-label="이전 날짜">‹</button>
+    <div><strong id="dateMain"></strong><span id="dateSub"></span></div>
+    <button id="nextDay" aria-label="다음 날짜">›</button>
+  </section>
+
+  <nav class="tabs">
+    <button class="active" data-page="home">홈</button>
+    <button data-page="tasks">우선업무</button>
+    <button data-page="checklist">체크리스트</button>
+    <button data-page="stats">통계</button>
+    <button data-page="more">더보기</button>
+  </nav>
+
+  <main>
+    <section id="page-home" class="page active">
+      <div class="hero">
+        <div class="quote-mark">“</div>
+        <div id="homeQuote" class="hero-text"></div>
+        <div id="homeAuthor" class="hero-author"></div>
+      </div>
+
+      <div class="card">
+        <h2>오늘 요약</h2>
+        <div class="summary-grid">
+          <div><span>업무</span><strong id="summaryTasks">0</strong></div>
+          <div><span>완료</span><strong id="summaryDone">0</strong></div>
+          <div><span>체크</span><strong id="summaryChecklist">0/10</strong></div>
+          <div><span>일정</span><strong id="summarySchedules">0</strong></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>오늘의 메모</h2>
+        <textarea id="quickMemo" placeholder="오늘 기억할 내용을 적어보세요."></textarea>
+      </div>
+    </section>
+
+    <section id="page-tasks" class="page">
+      <div class="card">
+        <div class="card-head">
+          <h2>오늘의 우선업무</h2>
+          <button id="sortPriorityBtn" class="small-btn">우선순위 정렬</button>
+        </div>
+        <div class="task-head"><span>진행</span><span>우선순위</span><span>업무내용</span></div>
+        <div id="taskRows"></div>
+        <button id="addTaskBtn" class="primary full">업무 추가</button>
+      </div>
+
+      <div class="card">
+        <h2>업무 메모</h2>
+        <textarea id="taskMemo" placeholder="업무 관련 메모"></textarea>
+      </div>
+    </section>
+
+    <section id="page-checklist" class="page">
+      <div class="card">
+        <div class="card-head">
+          <h2>일일 체크리스트</h2>
+          <button id="editChecklistBtn" class="small-btn">항목 설정</button>
+        </div>
+        <div class="score-box">
+          <div><span>오늘 점수</span><strong id="checkScore">0 / 10</strong></div>
+          <div><span>달성률</span><strong id="checkRate">0%</strong></div>
+        </div>
+        <div id="checklistRows"></div>
+      </div>
+    </section>
+
+    <section id="page-stats" class="page">
+      <div class="card">
+        <div class="stats-tabs">
+          <button id="weekTab" class="active">주간</button>
+          <button id="monthTab">월간</button>
+        </div>
+        <div id="statsSummary" class="stats-summary"></div>
+        <div id="statsChart" class="stats-chart"></div>
+      </div>
+    </section>
+
+    <section id="page-more" class="page">
+      <div class="menu-list">
+        <button id="scheduleBtn">예정일정 <span>›</span></button>
+        <button id="reviewBtn">오늘의 회고 <span>›</span></button>
+        <button id="searchBtn">검색 <span>›</span></button>
+        <button id="carryBtn">미완료 업무 내일로 이월 <span>›</span></button>
+        <button id="exportTextBtn">하루 기록 텍스트 저장 <span>›</span></button>
+        <button id="backupBtn">백업 / 복원 <span>›</span></button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="taskModal" class="modal">
+  <div class="dialog">
+    <h3>우선업무 입력</h3>
+    <label>진행상태<select id="taskStatusInput">
+      <option value="">선택 안 함</option>
+      <option value="진행중">진행중</option>
+      <option value="완료">완료</option>
+      <option value="취소">취소</option>
+      <option value="연기">연기</option>
+    </select></label>
+    <label>우선순위<select id="taskPriorityInput">
+      <option value="">선택 안 함</option>
+      <option>A1</option><option>A2</option><option>A3</option>
+      <option>B1</option><option>B2</option><option>B3</option>
+      <option>C1</option><option>C2</option><option>C3</option>
+    </select></label>
+    <label>업무내용<input id="taskContentInput" type="text" maxlength="120"></label>
+    <div class="dialog-actions">
+      <button id="deleteTaskBtn" class="danger">삭제</button>
+      <button data-close="taskModal">취소</button>
+      <button id="saveTaskBtn" class="primary">저장</button>
+    </div>
+  </div>
+</div>
+
+<div id="checklistSettingsModal" class="modal">
+  <div class="dialog tall">
+    <h3>체크리스트 10개 설정</h3>
+    <div id="checklistSettingsRows"></div>
+    <div class="dialog-actions">
+      <button data-close="checklistSettingsModal">취소</button>
+      <button id="saveChecklistSettingsBtn" class="primary">저장</button>
+    </div>
+  </div>
+</div>
+
+<div id="scheduleModal" class="modal">
+  <div class="dialog tall">
+    <h3>예정일정</h3>
+    <div class="schedule-form">
+      <input id="scheduleTimeInput" type="time">
+      <input id="scheduleTitleInput" type="text" placeholder="일정 내용">
+      <button id="addScheduleBtn" class="primary">추가</button>
+    </div>
+    <div id="scheduleRows"></div>
+    <div class="dialog-actions"><button data-close="scheduleModal">닫기</button></div>
+  </div>
+</div>
+
+<div id="reviewModal" class="modal">
+  <div class="dialog">
+    <h3>오늘의 회고</h3>
+    <textarea id="reviewInput" placeholder="잘한 점, 아쉬운 점, 내일 이어갈 일"></textarea>
+    <div class="dialog-actions">
+      <button data-close="reviewModal">취소</button>
+      <button id="saveReviewBtn" class="primary">저장</button>
+    </div>
+  </div>
+</div>
+
+<div id="searchModal" class="modal">
+  <div class="dialog tall">
+    <h3>업무·메모 검색</h3>
+    <div class="search-form">
+      <input id="searchInput" type="search" placeholder="검색어">
+      <button id="runSearchBtn" class="primary">검색</button>
+    </div>
+    <div id="searchResults"></div>
+    <div class="dialog-actions"><button data-close="searchModal">닫기</button></div>
+  </div>
+</div>
+
+<div id="backupModal" class="modal">
+  <div class="dialog">
+    <h3>백업 / 복원</h3>
+    <button id="downloadBackupBtn" class="primary full">백업 파일 저장</button>
+    <input id="restoreFileInput" type="file" accept=".json,application/json">
+    <button id="restoreBackupBtn" class="primary full">선택한 파일 복원</button>
+    <div class="dialog-actions"><button data-close="backupModal">닫기</button></div>
+  </div>
+</div>
+
+<div id="settingsModal" class="modal">
+  <div class="dialog">
+    <h3>환경설정</h3>
+    <label>메인화면<select id="homeModeInput">
+      <option value="quote">매일 명언</option>
+      <option value="mission">내 사명선언</option>
+      <option value="both">명언 + 사명선언</option>
+    </select></label>
+    <label>내 사명선언<textarea id="missionInput"></textarea></label>
+    <div class="dialog-actions">
+      <button data-close="settingsModal">취소</button>
+      <button id="saveSettingsBtn" class="primary">저장</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
