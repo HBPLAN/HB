@@ -8,8 +8,18 @@ const order={A1:1,A2:2,A3:3,B1:4,B2:5,B3:6,C1:7,C2:8,C3:9};
 
 function showLogin(){
   $('#loginScreen').classList.remove('hidden');
+  const lastUser=HB.storage.lastUser();
+  if(lastUser && !$('#loginUserInput').value){
+    $('#loginUserInput').value=lastUser;
+  }
   $('#loginPasswordInput').value='';
-  setTimeout(()=>$('#loginUserInput').focus(),80);
+  setTimeout(()=>{
+    if($('#loginUserInput').value){
+      $('#loginPasswordInput').focus();
+    }else{
+      $('#loginUserInput').focus();
+    }
+  },80);
 }
 
 function hideLogin(){
@@ -32,7 +42,10 @@ function startForUser(){
 
   hideLogin();
   renderAll();
-  save();
+
+  if(!save()){
+    alert('브라우저 저장소에 데이터를 저장하지 못했습니다. Safari 개인정보 보호 설정을 확인하세요.');
+  }
 }
 
 function handleLogin(){
@@ -60,7 +73,13 @@ function handleLogout(){
 
 function defaultDB(){return{version:1,settings:{homeMode:'quote',mission:'나는 중요한 일을 먼저 하며 차분하고 꾸준하게 성장한다.',checklistNames:[...HB.defaultChecklist]},days:{}}}
 function ensureDay(key){if(!db.days[key])db.days[key]={tasks:[],checklist:Array(10).fill(false),quickMemo:'',taskMemo:'',review:'',schedules:[]};const d=db.days[key];if(!Array.isArray(d.tasks))d.tasks=[];if(!Array.isArray(d.checklist)||d.checklist.length!==10)d.checklist=Array(10).fill(false);if(!Array.isArray(d.schedules))d.schedules=[];return d}
-const key=()=>dateString(currentDate),day=()=>ensureDay(key()),save=()=>HB.storage.save(db);
+const key=()=>dateString(currentDate),day=()=>ensureDay(key());
+function save(){
+  if(!db) return false;
+  const ok=HB.storage.save(db);
+  if(!ok) console.warn('HB Planner 데이터 저장에 실패했습니다.');
+  return ok;
+}
 const open=id=>$('#'+id).classList.add('show'),close=id=>$('#'+id).classList.remove('show');
 
 function renderDate(){$('#dateMain').textContent=currentDate.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});$('#dateSub').textContent=currentDate.toLocaleDateString('ko-KR',{weekday:'long'})}
@@ -111,4 +130,24 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 
   startForUser();
+
+  // Safari/PWA에서 앱을 닫거나 백그라운드로 보낼 때 마지막 상태 저장
+  window.addEventListener('pagehide',()=>save());
+  window.addEventListener('beforeunload',()=>save());
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='hidden'){
+      save();
+    }
+  });
+
+  // 뒤로가기 캐시에서 복귀할 때 저장 데이터 재확인
+  window.addEventListener('pageshow',event=>{
+    if(event.persisted && HB.storage.currentUser()){
+      const loaded=HB.storage.load();
+      if(loaded){
+        db=loaded;
+        renderAll();
+      }
+    }
+  });
 });
