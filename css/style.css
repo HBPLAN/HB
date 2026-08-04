@@ -99,3 +99,8 @@ textarea{width:100%;min-height:110px;resize:vertical;border:1px solid var(--line
   align-items:center;
   gap:4px;
 }
+
+/* Task postpone */
+.postpone-fields{display:none;margin-top:10px;padding:10px;border-radius:11px;background:#fff6e8;border:1px solid #f0d4a7}
+.postpone-fields.show{display:block}
+.postpone-info{display:block;margin-top:4px;font-size:11px;color:#b66a00;font-weight:800}

@@ -159,6 +159,17 @@
       <option>C1</option><option>C2</option><option>C3</option>
     </select></label>
     <label>업무내용<input id="taskContentInput" type="text" maxlength="120"></label>
+    <div id="postponeFields" class="postpone-fields">
+      <label>연기할 날짜<input id="postponeDateInput" type="date"></label>
+      <label>연기 이유<select id="postponeReasonInput">
+        <option value="">선택 안 함</option>
+        <option value="시간 부족">시간 부족</option>
+        <option value="자료 부족">자료 부족</option>
+        <option value="상대 일정">상대 일정</option>
+        <option value="우선순위 변경">우선순위 변경</option>
+        <option value="기타">기타</option>
+      </select></label>
+    </div>
     <div class="dialog-actions">
       <button id="deleteTaskBtn" class="danger">삭제</button>
       <button data-close="taskModal">취소</button>
